@@ -24,7 +24,7 @@ class BooksApp extends React.Component {
   //método para atualizar o livro, recebe 2 parametros, sendo um objeto livro e o shelf para atualizar no livro 
   updateBook = (book, shelf) => {
     BooksAPI.update(book, shelf).then(this.getAllBooks)
-
+    book.shelf = shelf;
   }
 
   render() {
@@ -32,18 +32,18 @@ class BooksApp extends React.Component {
       <div className="app">
         <Route exact path="/" render={() => (
           <ListBooksPage
-            books={this.state.books} onUpdateShelf={this.updateBook}
+            books={this.state.books}
+            onUpdateBook={this.updateBook}
           />
         )} />
         <Route path="/search" render={() => (
           <SearchBookPage
-            books={this.state.books} onUpdateShelf={this.updateBook}
+            books={this.state.books}
+            onUpdateBook={this.updateBook}
           />
         )} />
       </div>
-
     )
-
   }
 }
 

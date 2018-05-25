@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
-//import escapeRegExp from 'escape-string-regexp'
 import { Link } from 'react-router-dom'
 
 class ListBooksPage extends Component {
@@ -8,106 +6,60 @@ class ListBooksPage extends Component {
     value: ''
   }
 
-  onChangeShelf(book, shelf) {
-    this.props.onUpdateShelf(book, shelf)
+  //método para controlar se ouve alteração do shelf enquanto se está pesquisando na barra de pesquisa
+  // se ouver alteração, este método de retorno no route para a tela principal e vai acionar o método "updateBook"
+  updateBook(book, shelf) {
+    this.props.onUpdateBook(book, shelf)
   }
 
   render() {
-    const { books, onChangeShelf} = this.props
+    const { books } = this.props
     let showingBooks
     showingBooks = books
 
-    return ( 
+    const shelve = ["currentlyReading", "wantToRead", "read"]
+    const shelveNames = ["Currently Reading", "Want To Read", "Read"]
+
+    return (
 
       <div className="list-books">
         <div className="list-books-title">
           <h1>MyReads</h1>
         </div>
+
         <div className="list-books-content">
           <div>
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Currently Reading</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {showingBooks.filter(book => book.shelf === "currentlyReading").map((book) => (
-                    <li key={book.id}>
-                      <div className="book">
-                        <div className="book-top">
-                          <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: ` url(${book.imageLinks.smallThumbnail})` }}></div>
-                          <div className="book-shelf-changer">
-                            <select value={book.shelf} onChange={event => this.onChangeShelf(book, event.target.value)} >
-                              <option value="moveTo" disabled>Move to...</option>
-                              <option value="currentlyReading">Currently Reading</option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
+            {shelve.map((shelve, index) => {
+              return (
+                <div key={index} className="bookshelf">
+                  <h2 className="bookshelf-title">{shelveNames[index]}</h2>
+                  <div className="bookshelf-books">
+                    <ol className="books-grid">
+                      {showingBooks.filter(book => book.shelf === shelve).map((book) => (
+                        <li key={book.id}>
+                          <div className="book">
+                            <div className="book-top">
+                              <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: ` url(${book.imageLinks ? book.imageLinks.smallThumbnail : ''})` }}></div>
+                              <div className="book-shelf-changer">
+                                <select value={book.shelf} onChange={event => this.updateBook(book, event.target.value)} >
+                                  <option value="moveTo" disabled>Move to...</option>
+                                  <option value="currentlyReading">Currently Reading</option>
+                                  <option value="wantToRead">Want to Read</option>
+                                  <option value="read">Read</option>
+                                  <option value="none">None</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="book-title"><p>{book.title}</p></div>
+                            <div className="book-authors">{book.authors}</div>
                           </div>
-                        </div>
-                        <div className="book-title"><p>{book.title}</p></div>
-                        <div className="book-authors">{book.authors}</div>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </div>
-
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Want to Read</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {showingBooks.filter(book => book.shelf === "wantToRead").map((book) => (
-                    <li key={book.id}>
-                      <div className="book">
-                        <div className="book-top">
-                          <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: ` url(${book.imageLinks.smallThumbnail})` }}></div>
-                          <div className="book-shelf-changer">
-                            <select value={book.shelf} onChange={event => this.onChangeShelf(book, event.target.value)} >
-                              <option value="none" disabled>Move to...</option>
-                              <option value="currentlyReading">Currently Reading</option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="book-title"><p>{book.title}</p></div>
-                        <div className="book-authors">{book.authors}</div>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </div>
-
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Read</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {showingBooks.filter(book => book.shelf === "read").map((book) => (
-                    <li key={book.id}>
-                      <div className="book">
-                        <div className="book-top">
-                          <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: ` url(${book.imageLinks.smallThumbnail})` }}></div>
-                          <div className="book-shelf-changer">
-                            <select value={book.shelf} onChange={event => this.onChangeShelf(book, event.target.value)} >
-                              <option value="none" disabled>Move to...</option>
-                              <option value="currentlyReading">Currently Reading</option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="book-title"><p>{book.title}</p></div>
-                        <div className="book-authors">{book.authors}</div>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
         <div className="open-search">
