@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import escapeRegExp from 'escape-string-regexp'
+import { Throttle } from 'react-throttle';
 import * as BooksAPI from './BooksAPI'
 
 class SearchBookPage extends Component {
@@ -17,8 +18,8 @@ class SearchBookPage extends Component {
 
   //seta a string digitada na barra de pesquisa e chama o método de pesquisa dos livros no search do BooksAPI
   updateQuery = (query) => {
-    this.setState({ query: query.trim() })
-    BooksAPI.search(query.trim())
+    this.setState({ query })
+    BooksAPI.search(query)
       .then(response => {
         //ignorar erros 
         if (response && !response.error) {
@@ -38,7 +39,7 @@ class SearchBookPage extends Component {
             return book
           })
           //concatenar os livros da estante com os livros pesquisados, mas que sejam diferentes, para não repetir livros  no render 
-          let concats = booksResults.concat((book)=> book.id !== this.props.books.id)
+          let concats = booksResults.concat((book) => book.id !== this.props.books.id)
           //setar o resultado na propriedade books, para mostrar na tela todos os livros (estante + pesquisados)
           this.setState({ books: concats })
         }
@@ -65,10 +66,11 @@ class SearchBookPage extends Component {
         <div className="search-books-bar">
           <Link to="/" className="close-search">Close </Link>
           <div className="search-books-input-wrapper">
-            <input type="text" placeholder="Search by title or author"
-              value={query}
-              onChange={(event) => this.updateQuery(event.target.value)}
-            />
+            <Throttle time="500" handler="onChange" value={query}>
+              <input type="text" placeholder="Search by title or author"
+                onChange={(event) => this.updateQuery(event.target.value)}
+              />
+            </Throttle>
           </div>
         </div>
         <div className="search-books-results">
