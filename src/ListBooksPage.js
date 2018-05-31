@@ -14,14 +14,12 @@ class ListBooksPage extends Component {
 
   render() {
     const { books } = this.props
-    let showingBooks
-    showingBooks = books
-
-    const shelve = ["currentlyReading", "wantToRead", "read"]
-    const shelveNames = ["Currently Reading", "Want To Read", "Read"]
+    
+    const shelf = ["currentlyReading", "wantToRead", "read"]
+    const shelfNames = ["Currently Reading", "Want To Read", "Read"]
 
     return (
-
+ 
       <div className="list-books">
         <div className="list-books-title">
           <h1>MyReads</h1>
@@ -29,13 +27,13 @@ class ListBooksPage extends Component {
 
         <div className="list-books-content">
           <div>
-            {shelve.map((shelve, index) => {
+            {shelf.map((shelf, index) => {
               return (
                 <div key={index} className="bookshelf">
-                  <h2 className="bookshelf-title">{shelveNames[index]}</h2>
+                  <h2 className="bookshelf-title">{shelfNames[index]}</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                      {showingBooks.filter(book => book.shelf === shelve).map((book) => (
+                      {books.filter(book => book.shelf === shelf).map((book) => (
                         <li key={book.id}>
                           <div className="book">
                             <div className="book-top">
